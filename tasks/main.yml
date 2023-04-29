@@ -1,0 +1,27 @@
+# Instructions taken from https://developer.hashicorp.com/vagrant/downloads
+- name: Checking to see if key is already present
+  ansible.builtin.stat:
+    path: /usr/share/keyrings/hashicorp-archive-keyring.asc
+  register: keyring
+
+- name: Download repo signing key
+  ansible.builtin.get_url:
+    checksum: sha256:cafb01beac341bf2a9ba89793e6dd2468110291adfbb6c62ed11a0cde6c09029
+    url: https://apt.releases.hashicorp.com/gpg
+    dest: /usr/share/keyrings/hashicorp-archive-keyring.asc
+    mode: '644'
+  when: "ansible_os_family == 'Debian' and not keyring.stat.exists"
+
+- name: Add repo to list of sources
+  ansible.builtin.apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.asc] https://apt.releases.hashicorp.com {{ansible_lsb.codename}} main
+  when: "ansible_os_family == 'Debian'"
+
+- name: Make sure we have the latest metadata for apt
+  ansible.builtin.apt:
+    update_cache: True
+  when: ansible_os_family == "Debian"
+
+- name: Install the package
+  ansible.builtin.package:
+    name: vagrant

@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Adam
+  description: Vagrant - Virtual Machine manager
+  license: MIT
+  company: none
+  min_ansible_version: 2.7
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+  galaxy_tags:
+    - vm
+
+dependencies: []
