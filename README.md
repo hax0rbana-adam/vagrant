@@ -14,6 +14,7 @@ does not require you have SSH running.
 ```yaml
 - hosts: localhost
   connection: local
+  become: true
   roles:
     - role: hax0rbana_adam.vagrant
 ```
